@@ -1,4 +1,4 @@
-//Your calculator is going to contain functions for all of the basic math operators you typically find on simple calculators, so start by creating functions for the following items and testing them in your browser’s console.
+//operators
 const add = function (a, b) {
   return a + b;
 };
@@ -15,9 +15,27 @@ const divide = function (a, b) {
   return a / b;
 };
 
-//Create a new function operate that takes an operator and 2 numbers and then calls one of the above functions on the numbers.
 function operate(operator, a, b) {
   return operator;
 }
 
-console.log(operate(subtract(2, 3)));
+//variables
+const btn = Array.from(document.querySelectorAll('.btn'));
+
+const screen = document.getElementById('screen');
+
+///
+btn.map((button) => {
+  button.addEventListener('click', (e) => {
+    switch (e.target.innerHTML) {
+      default:
+        screen.innerHTML += e.target.innerHTML;
+        break;
+      case 'CLEAR':
+        screen.innerHTML = '';
+        break;
+      case '÷':
+        screen.innerHTML /= e.target.innerHTML;
+    }
+  });
+});

@@ -8,10 +8,10 @@ html {
   height: 100vh;
   background: linear-gradient(to right, rgb(189, 195, 199), rgb(44, 62, 80));
   background-position: center;
-  background-repeat: no-repeat;
   background-size: cover;
-  z-index: none;
+  overflow-y: hidden;
 }
+
 .calculator {
   background-color: silver;
   margin: 100px auto;
@@ -19,6 +19,7 @@ html {
   padding: 20px;
   border-radius: 5px;
   box-shadow: 0px 0px 20px black;
+  user-select: none;
 }
 
 .screen {
@@ -28,13 +29,17 @@ html {
   padding: 10px;
   margin-bottom: 20px;
   text-align: right;
-  font-size: 40px;
-  word-wrap: break-word;
+  font-size: 30px;
+  /*limit amount of characters on the screen */
+  text-overflow: ellipsis;
+  overflow: hidden;
   background-color: #fff;
   color: #000;
   text-shadow: 0px 0px 3px black;
   font-weight: bold;
+  user-select: text;
 }
+
 .btn-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -49,9 +54,17 @@ html {
 }
 
 .top {
-  width: 100%;
-  background-color: rgb(175, 81, 81) !important;
   border-radius: 5px;
+}
+
+#clear {
+  width: 75%;
+  background-color: rgb(175, 81, 81) !important;
+}
+
+#remove {
+  width: 82.5px;
+  background-color: rgb(216, 203, 81) !important;
 }
 
 .btn {
