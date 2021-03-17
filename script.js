@@ -34,8 +34,11 @@ btn.map((button) => {
       case 'CLEAR':
         screen.innerHTML = '';
         break;
-      case '÷':
-        screen.innerHTML /= e.target.innerHTML;
+      case '←':
+        screen.innerHTML = screen.innerHTML.slice(0, -1); //removes last character and returns a new array
+        break;
+      // case '+':
+      //   screen.innerHTML = add(screen.innerHTML, screen.innerHTML);
     }
   });
 });

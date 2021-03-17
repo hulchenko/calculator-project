@@ -62,7 +62,7 @@ html {
   background-color: rgb(175, 81, 81) !important;
 }
 
-#remove {
+#backspace {
   width: 82.5px;
   background-color: rgb(216, 203, 81) !important;
 }
@@ -76,6 +76,14 @@ html {
   background-color: #999;
   border-radius: 5px;
   cursor: pointer;
+}
+
+.operator {
+  background-color: rgb(81, 200, 216) !important;
+}
+
+#equals {
+  background-color: rgb(216, 203, 81) !important;
 }
 
 .btn:hover {
