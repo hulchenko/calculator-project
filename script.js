@@ -5,6 +5,42 @@ const upperKeys = document.querySelector('.btn-grid-top');
 let firstValue = '';
 let secondValue = '';
 
+function add(a, b) {
+  return parseInt(a) + parseInt(b);
+}
+
+function subtract(a, b) {
+  return parseInt(a) - parseInt(b);
+}
+
+function multiply(a, b) {
+  return parseInt(a) * parseInt(b);
+}
+
+function divide(a, b) {
+  if (parseInt(b) === 0) {
+    /*
+    screen.innerHTML.replaceAll('Error');
+    console.log(typeof screen.innerHTML);
+    */
+  }
+  return parseInt(a) / parseInt(b);
+}
+
+function calculate(a, operator, b) {
+  let result = '';
+  if (operator === 'add') {
+    result = add(a, b);
+  } else if (operator === 'subtract') {
+    result = subtract(a, b);
+  } else if (operator === 'multiply') {
+    result = multiply(a, b);
+  } else if (operator === 'divide') {
+    result = divide(a, b);
+  }
+  return result;
+}
+
 upperKeys.addEventListener('click', function (e) {
   if (e.target.matches('button')) {
     const key = e.target;
@@ -44,13 +80,20 @@ keys.addEventListener('click', function (e) {
     ) {
       key.classList.add('operator-click');
       calculator.dataset.previousKeyType = 'operator';
+      calculator.dataset.firstValue = screenContent;
+      calculator.dataset.operator = action;
+      console.log(action);
     }
     if (action === 'decimal') {
       screen.innerHTML = screenContent + '.';
     }
     if (action === 'calculate') {
       const secondValue = screenContent;
-      console.log(secondValue);
+      const firstValue = calculator.dataset.firstValue;
+      const operator = calculator.dataset.operator;
+      console.log(
+        (screen.innerHTML = calculate(firstValue, operator, secondValue))
+      );
     }
     Array.from(key.parentNode.children).map(function (k) {
       k.classList.remove('operator-click');
