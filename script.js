@@ -31,7 +31,12 @@ function calculate(a, operator, b) {
   } else if (operator === 'multiply') {
     result = multiply(a, b);
   } else if (operator === 'divide') {
-    result = divide(a, b);
+    if (b == 0) {
+      alert('Cannot divide by 0!');
+      clear();
+    } else {
+      result = divide(a, b);
+    }
   }
   return result;
 }
@@ -46,7 +51,6 @@ upperKeys.addEventListener('click', function (e) {
     if (action === 'clear') {
       //using screenContent wouldn't work, as it changing const variable value
       clear();
-      screen.innerHTML = 0;
       calculator.dataset.previousKeyType = 'clear';
     }
     if (action === 'backspace') {
@@ -57,7 +61,7 @@ upperKeys.addEventListener('click', function (e) {
 
 keys.addEventListener('click', function (e) {
   if (e.target.matches('button')) {
-    const key = e.target; //? probably don't need this
+    const key = e.target;
     const keyContent = e.target.innerHTML; //num
     const action = key.dataset.action; //data-action class value
     const screenContent = screen.innerHTML;
@@ -71,7 +75,7 @@ keys.addEventListener('click', function (e) {
       ) {
         screen.innerHTML = keyContent;
       } else {
-        screen.innerHTML += keyContent;
+        screen.innerHTML = screenContent + keyContent;
       }
       calculator.dataset.previousKey = 'number';
     }
@@ -100,7 +104,8 @@ keys.addEventListener('click', function (e) {
         calculator.dataset.firstValue = screenContent;
       }
 
-      key.classList.add('operator-click'); //to define operator buttons on click
+      key.classList.add('operator-click');
+      console.log(key); //to define operator buttons on click
       calculator.dataset.previousKeyType = 'operator';
       calculator.dataset.operator = action;
     }
@@ -139,8 +144,11 @@ keys.addEventListener('click', function (e) {
 
 //The clear key
 function clear() {
-  calculator.dataset.firstValue = '';
-  calculator.dataset.modValue = '';
-  calculator.dataset.operator = '';
-  calculator.dataset.previousKeyType = '';
+  // calculator.dataset.firstValue = '';
+  // calculator.dataset.modValue = '';
+  // calculator.dataset.operator = '';
+  // calculator.dataset.previousKeyType = '';
+  // screen.innerHTML = 0;
+  //removing data value reset, as it's not working properly.
+  window.location.reload();
 }
