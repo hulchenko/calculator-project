@@ -5,6 +5,7 @@ const upperKeys = document.querySelector('.btn-grid-top');
 let firstValue = '';
 let secondValue = '';
 
+//basic operations:
 function add(a, b) {
   return parseInt(a) + parseInt(b);
 }
@@ -18,15 +19,9 @@ function multiply(a, b) {
 }
 
 function divide(a, b) {
-  if (parseInt(b) === 0) {
-    /*
-    screen.innerHTML.replaceAll('Error');
-    console.log(typeof screen.innerHTML);
-    */
-  }
   return parseInt(a) / parseInt(b);
 }
-
+//operator function
 function calculate(a, operator, b) {
   let result = '';
   if (operator === 'add') {
@@ -47,9 +42,11 @@ upperKeys.addEventListener('click', function (e) {
     const keyContent = e.target.innerHTML;
     const action = key.dataset.action;
     const screenContent = screen.innerHTML;
+    let previousKeyType = calculator.dataset.previousKeyType;
     if (action === 'clear') {
       //using screenContent wouldn't work, as it changing const variable value
-      screen.innerHTML = '0';
+      calculator.dataset.previousKeyType = 'clear';
+      console.log(calculator.dataset.previousKeyType);
     }
     if (action === 'backspace') {
       screen.innerHTML = screen.innerHTML.slice(0, -1); //removes last character and returns a new array
@@ -71,6 +68,8 @@ keys.addEventListener('click', function (e) {
       } else {
         screen.innerHTML += keyContent;
       }
+      calculator.dataset.previousKey = 'number';
+      console.log(calculator.dataset.previousKey);
     }
     if (
       action === 'add' ||
@@ -78,22 +77,43 @@ keys.addEventListener('click', function (e) {
       action === 'multiply' ||
       action === 'divide'
     ) {
-      key.classList.add('operator-click');
-      calculator.dataset.previousKeyType = 'operator';
-      calculator.dataset.firstValue = screenContent;
-      calculator.dataset.operator = action;
-      console.log(action);
-    }
-    if (action === 'decimal') {
-      screen.innerHTML = screenContent + '.';
-    }
-    if (action === 'calculate') {
-      const secondValue = screenContent;
+      //at this point calculator knows only 1st value
       const firstValue = calculator.dataset.firstValue;
       const operator = calculator.dataset.operator;
-      console.log(
-        (screen.innerHTML = calculate(firstValue, operator, secondValue))
-      );
+      const secondValue = screenContent;
+
+      if (firstValue && operator && previousKeyType !== 'operator') {
+        //calculate values on multiple operators clicks
+        const calcValue = calculate(firstValue, operator, secondValue); //take result value and memorize it in calcValue;
+        screen.innerHTML = calcValue;
+        calculator.dataset.firstValue = calcValue; //reassign calcValue under firstValue, to enable proper calculations upon multiple operator clicks without hitting calculate operator
+      } else {
+        calculator.dataset.firstValue = screenContent;
+      }
+
+      key.classList.add('operator-click');
+      calculator.dataset.previousKeyType = 'operator';
+      calculator.dataset.operator = action;
+    }
+    if (action === 'decimal') {
+      if (!screen.innerHTML.includes('.')) {
+        screen.innerHTML = screenContent + '.';
+      } else if (previousKeyType === 'operator') {
+        screen.innerHTML = '0.';
+      }
+      calculator.dataset.previousKey = 'decimal';
+      console.log(calculator.dataset.previousKey);
+    }
+    if (action === 'calculate') {
+      //at this point calculator knows only 2nd value
+      const firstValue = calculator.dataset.firstValue;
+      const operator = calculator.dataset.operator;
+      const secondValue = screenContent;
+      if (firstValue) {
+        screen.innerHTML = calculate(firstValue, operator, secondValue);
+      }
+      calculator.dataset.previousKeyType = 'calculate';
+      console.log(calculator.dataset.previousKeyType);
     }
     Array.from(key.parentNode.children).map(function (k) {
       k.classList.remove('operator-click');
