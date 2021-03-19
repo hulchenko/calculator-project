@@ -46,7 +46,6 @@ upperKeys.addEventListener('click', function (e) {
     if (action === 'clear') {
       //using screenContent wouldn't work, as it changing const variable value
       calculator.dataset.previousKeyType = 'clear';
-      console.log(calculator.dataset.previousKeyType);
     }
     if (action === 'backspace') {
       screen.innerHTML = screen.innerHTML.slice(0, -1); //removes last character and returns a new array
@@ -63,13 +62,16 @@ keys.addEventListener('click', function (e) {
     const previousKeyType = calculator.dataset.previousKeyType;
     if (!action) {
       //any num button pressed
-      if (screenContent === '0' || previousKeyType === 'operator') {
+      if (
+        screenContent === '0' ||
+        previousKeyType === 'operator' ||
+        previousKeyType === 'calculate'
+      ) {
         screen.innerHTML = keyContent;
       } else {
         screen.innerHTML += keyContent;
       }
       calculator.dataset.previousKey = 'number';
-      console.log(calculator.dataset.previousKey);
     }
     if (
       action === 'add' ||
@@ -82,7 +84,12 @@ keys.addEventListener('click', function (e) {
       const operator = calculator.dataset.operator;
       const secondValue = screenContent;
 
-      if (firstValue && operator && previousKeyType !== 'operator') {
+      if (
+        firstValue &&
+        operator &&
+        previousKeyType !== 'operator' &&
+        previousKeyType !== 'calculate' //to avoid operators' calculations after calc button was clicked
+      ) {
         //calculate values on multiple operators clicks
         const calcValue = calculate(firstValue, operator, secondValue); //take result value and memorize it in calcValue;
         screen.innerHTML = calcValue;
@@ -91,32 +98,41 @@ keys.addEventListener('click', function (e) {
         calculator.dataset.firstValue = screenContent;
       }
 
-      key.classList.add('operator-click');
+      key.classList.add('operator-click'); //to define operator buttons on click
       calculator.dataset.previousKeyType = 'operator';
       calculator.dataset.operator = action;
     }
     if (action === 'decimal') {
       if (!screen.innerHTML.includes('.')) {
         screen.innerHTML = screenContent + '.';
-      } else if (previousKeyType === 'operator') {
+      } else if (
+        previousKeyType === 'operator' ||
+        previousKeyType === 'calculate'
+      ) {
         screen.innerHTML = '0.';
       }
-      calculator.dataset.previousKey = 'decimal';
-      console.log(calculator.dataset.previousKey);
+      calculator.dataset.previousKeyType = 'decimal';
     }
     if (action === 'calculate') {
       //at this point calculator knows only 2nd value
-      const firstValue = calculator.dataset.firstValue;
+      let firstValue = calculator.dataset.firstValue; // change setting to *let* as it's going to change on every calculate iteration
       const operator = calculator.dataset.operator;
-      const secondValue = screenContent;
+      let secondValue = screenContent;
+
       if (firstValue) {
+        if (previousKeyType === 'calculate') {
+          firstValue = screenContent;
+          secondValue = calculator.dataset.modValue; //#2 assigning modValue into secondValue for the consecutive calculations
+        }
         screen.innerHTML = calculate(firstValue, operator, secondValue);
       }
+      calculator.dataset.modValue = secondValue; //#1 memorizing secondValue in a separate variable for next calculation
       calculator.dataset.previousKeyType = 'calculate';
-      console.log(calculator.dataset.previousKeyType);
     }
     Array.from(key.parentNode.children).map(function (k) {
       k.classList.remove('operator-click');
     });
   }
 });
+
+//The clear key has two uses
