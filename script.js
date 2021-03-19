@@ -45,6 +45,8 @@ upperKeys.addEventListener('click', function (e) {
     let previousKeyType = calculator.dataset.previousKeyType;
     if (action === 'clear') {
       //using screenContent wouldn't work, as it changing const variable value
+      clear();
+      screen.innerHTML = 0;
       calculator.dataset.previousKeyType = 'clear';
     }
     if (action === 'backspace') {
@@ -135,4 +137,10 @@ keys.addEventListener('click', function (e) {
   }
 });
 
-//The clear key has two uses
+//The clear key
+function clear() {
+  calculator.dataset.firstValue = '';
+  calculator.dataset.modValue = '';
+  calculator.dataset.operator = '';
+  calculator.dataset.previousKeyType = '';
+}
