@@ -2,8 +2,6 @@ const calculator = document.querySelector('.calculator');
 const screen = document.querySelector('.screen');
 const keys = document.querySelector('.btn-grid');
 const upperKeys = document.querySelector('.btn-grid-top');
-let firstValue = '';
-let secondValue = '';
 
 //basic operations:
 function add(a, b) {
@@ -32,8 +30,11 @@ function calculate(a, operator, b) {
     result = multiply(a, b);
   } else if (operator === 'divide') {
     if (b == 0) {
-      alert('Cannot divide by 0!');
-      clear();
+      message = screen.innerText = 'Cannot divide by 0!';
+      setTimeout(function () {
+        clear();
+      }, 1500);
+      return message;
     } else {
       result = divide(a, b);
     }
@@ -44,10 +45,7 @@ function calculate(a, operator, b) {
 upperKeys.addEventListener('click', function (e) {
   if (e.target.matches('button')) {
     const key = e.target;
-    const keyContent = e.target.innerHTML;
     const action = key.dataset.action;
-    const screenContent = screen.innerHTML;
-    let previousKeyType = calculator.dataset.previousKeyType;
     if (action === 'clear') {
       //using screenContent wouldn't work, as it changing const variable value
       clear();
@@ -62,10 +60,15 @@ upperKeys.addEventListener('click', function (e) {
 keys.addEventListener('click', function (e) {
   if (e.target.matches('button')) {
     const key = e.target;
-    const keyContent = e.target.innerHTML; //num
+    const keyContent = key.innerHTML; //num
     const action = key.dataset.action; //data-action class value
     const screenContent = screen.innerHTML;
     const previousKeyType = calculator.dataset.previousKeyType;
+
+    Array.from(key.parentNode.children).map(function (k) {
+      k.classList.remove('operator-click');
+    });
+
     if (!action) {
       //any num button pressed
       if (
@@ -77,8 +80,21 @@ keys.addEventListener('click', function (e) {
       } else {
         screen.innerHTML = screenContent + keyContent;
       }
-      calculator.dataset.previousKey = 'number';
+      calculator.dataset.previousKeyType = 'number';
     }
+
+    if (action === 'decimal') {
+      if (!screenContent.includes('.')) {
+        screen.innerHTML = screenContent + '.';
+      } else if (
+        previousKeyType === 'operator' ||
+        previousKeyType === 'calculate'
+      ) {
+        screen.innerHTML = '0.';
+      }
+      calculator.dataset.previousKeyType = 'decimal';
+    }
+
     if (
       action === 'add' ||
       action === 'subtract' ||
@@ -105,21 +121,11 @@ keys.addEventListener('click', function (e) {
       }
 
       key.classList.add('operator-click');
-      console.log(key); //to define operator buttons on click
+      //to define operator buttons on click
       calculator.dataset.previousKeyType = 'operator';
       calculator.dataset.operator = action;
     }
-    if (action === 'decimal') {
-      if (!screen.innerHTML.includes('.')) {
-        screen.innerHTML = screenContent + '.';
-      } else if (
-        previousKeyType === 'operator' ||
-        previousKeyType === 'calculate'
-      ) {
-        screen.innerHTML = '0.';
-      }
-      calculator.dataset.previousKeyType = 'decimal';
-    }
+
     if (action === 'calculate') {
       //at this point calculator knows only 2nd value
       let firstValue = calculator.dataset.firstValue; // change setting to *let* as it's going to change on every calculate iteration
@@ -136,19 +142,14 @@ keys.addEventListener('click', function (e) {
       calculator.dataset.modValue = secondValue; //#1 memorizing secondValue in a separate variable for next calculation
       calculator.dataset.previousKeyType = 'calculate';
     }
-    Array.from(key.parentNode.children).map(function (k) {
-      k.classList.remove('operator-click');
-    });
   }
 });
 
 //The clear key
 function clear() {
-  // calculator.dataset.firstValue = '';
-  // calculator.dataset.modValue = '';
-  // calculator.dataset.operator = '';
-  // calculator.dataset.previousKeyType = '';
-  // screen.innerHTML = 0;
-  //removing data value reset, as it's not working properly.
-  window.location.reload();
+  calculator.dataset.firstValue = '';
+  calculator.dataset.modValue = '';
+  calculator.dataset.operator = '';
+  calculator.dataset.previousKeyType = '';
+  screen.innerHTML = 0;
 }
