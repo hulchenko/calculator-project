@@ -3,7 +3,7 @@
 This app is a final project of The Odin Project.
 Simple yet functional calculator application built using vanilla JavaScript, HTML, and CSS. It allows users to perform basic arithmetic operations with an intuitive and responsive interface.
 
-<img src="https://raw.githubusercontent.com/hulchenko/calculator-project/refs/heads/main/src/public/images/screen-desktop.png" alt="App Screenshot Desktop"/>
+<img src="https://raw.githubusercontent.com/hulchenko/calculator-project/refs/heads/main/public/images/screen-desktop.png" alt="App Screenshot Desktop"/>
 
 ### Features:
 
